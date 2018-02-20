@@ -1,6 +1,6 @@
 # Portal for DigiBP 2018 @ GitHub
 
-This is the DigiBP 2018 portal source code hosted on [https://digibp.github.io/digibp-portal-2018/](https://digibp.github.io/digibp-portal-2018/).
+This is the DigiBP 2018 portal source code hosted on [https://digibp.github.io/portal-2018/](https://digibp.github.io/portal-2018/).
 
 > Note: This is a fork of the IBM portal hosted on [http://ibm.github.io](http://ibm.github.io). The original version is published under an MIT license.
 
