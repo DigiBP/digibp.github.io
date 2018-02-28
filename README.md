@@ -1,7 +1,3 @@
----
-layout: home
----
-
 Welcome to Digitalisation of Business Processes
 
 Important Links:
