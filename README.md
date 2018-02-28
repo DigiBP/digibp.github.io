@@ -1,4 +1,8 @@
-## Welcome to Digitalisation of Business Processes
+---
+layout: home
+---
+
+Welcome to Digitalisation of Business Processes
 
 Important Links:
 - [DigiBP Portal 2018](portal-2018)
