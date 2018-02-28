@@ -1,10 +1,8 @@
 remote_theme: "mmistakes/jekyll-theme-basically-basic"
-title: DigiBP - Digitalisation of Business Processes
-description: This is the portal for the Digitalisation of Business Processes module.
 
 # Site Settings
 lang: en-GB
-title: DigiBP
+title: DigiBP - Digitalisation of Business Processes
 email: andreas.martin@fhnw.ch
 description: "This is the portal for the Digitalisation of Business Processes module."
 url: "https://digibp.github.io"
@@ -12,7 +10,7 @@ repository: "DigiBP/digibp.github.io"
 author:
   name: Andreas Martin
 github_username: DigiBP
-logo: /assets/icons/basically-basic-logo-light.svg
+logo: https://avatars3.githubusercontent.com/u/25099178
 search: true
 search_full_content: true
 search_provider: lunr
