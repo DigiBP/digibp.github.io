@@ -5,7 +5,7 @@ var orgs = [
       "link": "https://github.com/DigiBP"
   },*/
   {
-      "name": "DigiBP/digibp-pizza",
+      "name": "DigiBP/digibp-denali",
       "type": "repo"
   },
   {
