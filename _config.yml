@@ -17,10 +17,6 @@ search_provider: lunr
 
 # Front Matter Defaults
 defaults:
-  # _posts
-  - scope:
-      path: "_posts"
-      type: posts
     values:
-      layout: post
+      layout: home
 read_time: true
