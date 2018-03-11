@@ -17,6 +17,3 @@ search_provider: lunr
 
 # Front Matter Defaults
 defaults:
-    values:
-      layout: home
-read_time: true
