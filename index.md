@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: page
 ---
 
 [![DigiBP GitHub](https://img.shields.io/badge/DigiBP-GitHub-lightgrey.svg)](https://github.com/DigiBP)
