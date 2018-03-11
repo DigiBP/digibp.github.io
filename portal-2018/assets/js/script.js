@@ -66,10 +66,7 @@
 
                 // These client tokens are for a dummy app, and there is no user specific
                 // information that we get, so all in all, pretty safe to expose this here.
-                var uri = "https://api.github.com/" + orgs.type + "s/" + org + reposcmd +
-                    "?per_page=1000" +
-                    "&client_id=1bafa09b6086eec7afb4" +
-                    "&client_secret=7e6422a0a2e24f0d0ecb7521a63990b5758c9cc8";
+                var uri = "https://api.github.com/" + orgs.type + "s/" + org + reposcmd;
                 $.getJSON(uri, function(result) {
                     if (!Array.isArray(result)) {
                         result = [].concat(result);
