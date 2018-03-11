@@ -1,4 +1,5 @@
 ---
+title: "DigiBP Portal"
 layout: page
 ---
 
@@ -7,11 +8,3 @@ layout: page
 [![DigiBP WIKI](https://img.shields.io/badge/DigiBP-WIKI-yellow.svg)](https://github.com/DigiBP/digibp.github.io/wiki)
 [![DigiBP Camunda Template](https://img.shields.io/badge/DigiBP-Camunda%20Template-red.svg)](https://github.com/DigiBP/digibp-camunda-template)
 [![DigiBP Camunda Examples](https://img.shields.io/badge/DigiBP-Camunda%20Examples-blue.svg)](https://github.com/DigiBP/digibp-camunda-examples)
-
-asdf
-
-{{ content }}
-
-{{ 
-  asdf
-}}
