@@ -8,3 +8,8 @@ layout: page
 [![DigiBP Wiki](https://img.shields.io/badge/DigiBP-Wiki-yellow.svg)](https://github.com/DigiBP/digibp.github.io/wiki)
 [![DigiBP Camunda Template](https://img.shields.io/badge/DigiBP-Camunda%20Template-red.svg)](https://github.com/DigiBP/digibp-camunda-template)
 [![DigiBP Camunda Examples](https://img.shields.io/badge/DigiBP-Camunda%20Examples-blue.svg)](https://github.com/DigiBP/digibp-camunda-examples)
+
+Welcome to the portal of the FHNW module "Digitalisation of Business Processes" of the master of sience in business information systems module.
+
+## Main sources of information
+- [![DigiBP GitHub](https://img.shields.io/badge/DigiBP-GitHub-lightgrey.svg)](https://github.com/DigiBP) We have a GitHub organisation space with team, template, showcase and exercise GIT repositories. 
