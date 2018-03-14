@@ -9,4 +9,4 @@ layout: page
 [![DigiBP Camunda Template](https://img.shields.io/badge/DigiBP-Camunda%20Template-red.svg?longCache=true)](https://github.com/DigiBP/digibp-camunda-template)
 [![DigiBP Camunda Examples](https://img.shields.io/badge/DigiBP-Camunda%20Examples-blue.svg?longCache=true)](https://github.com/DigiBP/digibp-camunda-examples)
 
-Welcome to the portal of the FHNW module `Digitalisation of Business Processes` of the master of science in business information systems.
+Welcome to the portal of the FHNW module **Digitalisation of Business Processes** of the master of science in business information systems.
