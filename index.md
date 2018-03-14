@@ -1,6 +1,6 @@
 ---
 title: "DigiBP Portal"
-layout: home
+layout: page
 ---
 
 [![DigiBP GitHub](https://img.shields.io/badge/DigiBP-GitHub-lightgrey.svg?longCache=true)](https://github.com/DigiBP)
