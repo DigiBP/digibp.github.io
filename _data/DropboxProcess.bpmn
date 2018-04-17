@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" targetNamespace="http://www.signavio.com/bpmn20" exporter="Camunda Modeler" exporterVersion="1.11.3" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd">
+  <process id="DropboxProcess" name="DropboxProcess" isExecutable="true">
+    <exclusiveGateway id="gateway_approved" name="Approved?">
+      <extensionElements>
+        <camunda:properties>
+          <camunda:property name="KPI-Cycle-End" value="Tweet Approval Time" />
+        </camunda:properties>
+      </extensionElements>
+      <incoming>SequenceFlow_2</incoming>
+      <outgoing>no</outgoing>
+      <outgoing>yes</outgoing>
+    </exclusiveGateway>
+    <sequenceFlow id="no" name="no	" sourceRef="gateway_approved" targetRef="service_task_send_rejection_notification">
+      <extensionElements>
+        <camunda:properties>
+          <camunda:property name="probability" value="13" />
+        </camunda:properties>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression" id="FormalExpression_1">#{!approved}</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="yes" name="yes" sourceRef="gateway_approved" targetRef="service_task_createfile_on_dropbox">
+      <extensionElements>
+        <camunda:properties>
+          <camunda:property name="probability" value="87" />
+        </camunda:properties>
+      </extensionElements>
+      <conditionExpression xsi:type="tFormalExpression" id="FormalExpression_2">#{approved}</conditionExpression>
+    </sequenceFlow>
+    <exclusiveGateway id="gateway_join" name="Join">
+      <incoming>SequenceFlow_16bnzyu</incoming>
+      <incoming>SequenceFlow_0ch90ml</incoming>
+      <outgoing>SequenceFlow_5</outgoing>
+    </exclusiveGateway>
+    <sequenceFlow id="SequenceFlow_5" name="" sourceRef="gateway_join" targetRef="end_event_tweet_handled" />
+    <serviceTask id="service_task_createfile_on_dropbox" name="create / publish new file in dropbox with the approved content">
+      <extensionElements>
+        <camunda:properties>
+          <camunda:property name="KPI-Ratio" value="Tweet Approved" />
+        </camunda:properties>
+        <camunda:connector>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="url"><![CDATA[https://prod-02.westeurope.logic.azure.com:443/workflows/54927e2b8944422dbfa14e303cda5c94/triggers/manual/paths/invoke?api-version=2016-06-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=T5teF9gNfQyUoN-Fopo7d_FACy7vsQnDucHPuCkrHws]]></camunda:inputParameter>
+            <camunda:inputParameter name="method">POST</camunda:inputParameter>
+            <camunda:inputParameter name="headers">
+              <camunda:map>
+                <camunda:entry key="Content-Type">application/json</camunda:entry>
+              </camunda:map>
+            </camunda:inputParameter>
+            <camunda:inputParameter name="payload">
+              <camunda:script scriptFormat="JavaScript"><![CDATA[var data = execution.getVariable("content");
+var file = execution.getVariable("file");
+var path = execution.getVariable("path");
+var out = { "content":data, "file": file, "path":path};
+JSON.stringify(out);]]></camunda:script>
+            </camunda:inputParameter>
+          </camunda:inputOutput>
+          <camunda:connectorId>http-connector</camunda:connectorId>
+        </camunda:connector>
+      </extensionElements>
+      <incoming>yes</incoming>
+      <outgoing>SequenceFlow_13zoakc</outgoing>
+    </serviceTask>
+    <endEvent id="end_event_tweet_handled" name="End process">
+      <incoming>SequenceFlow_5</incoming>
+    </endEvent>
+    <userTask id="user_task_review_filecontent" name="Review file content" camunda:assignee="demo">
+      <extensionElements>
+        <camunda:properties>
+          <camunda:property name="durationMean" value="10000" />
+          <camunda:property name="durationSd" value="5000" />
+        </camunda:properties>
+        <camunda:formData>
+          <camunda:formField id="file" label="File name" type="string" />
+          <camunda:formField id="path" label="Dropbox  folder" type="string" />
+          <camunda:formField id="content" label="File Content" type="string" />
+          <camunda:formField id="approved" label="Approved?" type="boolean" />
+          <camunda:formField id="review" label="Review file content" type="string" />
+        </camunda:formData>
+      </extensionElements>
+      <incoming>SequenceFlow_9</incoming>
+      <outgoing>SequenceFlow_2</outgoing>
+    </userTask>
+    <sequenceFlow id="SequenceFlow_2" name="" sourceRef="user_task_review_filecontent" targetRef="gateway_approved" />
+    <startEvent id="start_event_new_filecontent" name="Content written" camunda:initiator="initiator">
+      <extensionElements>
+        <camunda:properties>
+          <camunda:property name="KPI-Cycle-Start" value="Tweet Approval Time" />
+        </camunda:properties>
+        <camunda:formData>
+          <camunda:formField id="content" label="Content" type="string" />
+        </camunda:formData>
+      </extensionElements>
+      <outgoing>SequenceFlow_9</outgoing>
+    </startEvent>
+    <sequenceFlow id="SequenceFlow_9" name="" sourceRef="start_event_new_filecontent" targetRef="user_task_review_filecontent" />
+    <userTask id="service_task_send_rejection_notification" name="Content is rejected" camunda:assignee="demo">
+      <extensionElements>
+        <camunda:formData>
+          <camunda:formField id="Error" label="Error" type="string" defaultValue="Content is rejected. File wont be published" />
+        </camunda:formData>
+      </extensionElements>
+      <incoming>no</incoming>
+      <outgoing>SequenceFlow_0ch90ml</outgoing>
+    </userTask>
+    <sequenceFlow id="SequenceFlow_16bnzyu" sourceRef="Task_1142u04" targetRef="gateway_join" />
+    <sequenceFlow id="SequenceFlow_0ch90ml" sourceRef="service_task_send_rejection_notification" targetRef="gateway_join" />
+    <sequenceFlow id="SequenceFlow_13zoakc" sourceRef="service_task_createfile_on_dropbox" targetRef="Task_1142u04" />
+    <userTask id="Task_1142u04" name="Show success message" camunda:assignee="demo">
+      <extensionElements>
+        <camunda:formData>
+          <camunda:formField id="sucess" label="sucess" type="string" defaultValue="File is created successfully in Dropbox" />
+        </camunda:formData>
+      </extensionElements>
+      <incoming>SequenceFlow_13zoakc</incoming>
+      <outgoing>SequenceFlow_16bnzyu</outgoing>
+    </userTask>
+  </process>
+  <message id="Message_05qktla" name="Content is rejected. Hence file wont be created.Process ends" />
+  <message id="Message_0zrhzt1" name="The file was created successfully in dropbox" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_TwitterDemoProcess">
+    <bpmndi:BPMNPlane id="BPMNPlane_TwitterDemoProcess" bpmnElement="DropboxProcess">
+      <bpmndi:BPMNShape id="BPMNShape_Approved__3" bpmnElement="gateway_approved" isMarkerVisible="true">
+        <omgdc:Bounds x="449" y="114" width="40" height="40" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="488" y="147" width="53" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_Publish_on_Twitter_3" bpmnElement="service_task_createfile_on_dropbox">
+        <omgdc:Bounds x="535" y="174" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_Exclusive_Databased_Gateway_3" bpmnElement="gateway_join" isMarkerVisible="true">
+        <omgdc:Bounds x="788" y="114" width="40" height="40" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="828" y="147" width="21" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_EndNoneEvent_3" bpmnElement="end_event_tweet_handled">
+        <omgdc:Bounds x="902" y="120" width="28" height="28" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="886" y="150" width="62" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_5" bpmnElement="SequenceFlow_5" sourceElement="BPMNShape_Exclusive_Databased_Gateway_3" targetElement="BPMNShape_EndNoneEvent_3">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="828" y="134" />
+        <omgdi:waypoint xsi:type="omgdc:Point" x="903" y="134" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="866" y="119" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_no" bpmnElement="no" sourceElement="BPMNShape_Approved__3" targetElement="UserTask_1lea1w1_di">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="469" y="114" />
+        <omgdi:waypoint xsi:type="omgdc:Point" x="469" y="58" />
+        <omgdi:waypoint xsi:type="omgdc:Point" x="582" y="58" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="484" y="77.07692307692308" width="13" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="BPMNEdge_yes" bpmnElement="yes" sourceElement="BPMNShape_Approved__3" targetElement="BPMNShape_Publish_on_Twitter_3">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="469" y="154" />
+        <omgdi:waypoint xsi:type="omgdc:Point" x="469" y="214" />
+        <omgdi:waypoint xsi:type="omgdc:Point" x="535" y="214" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="483" y="192" width="18" height="13" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="BPMNShape_Review_Tweet_3" bpmnElement="user_task_review_filecontent">
+        <omgdc:Bounds x="218" y="94" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_2" bpmnElement="SequenceFlow_2">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="318" y="134" />
+        <omgdi:waypoint xsi:type="omgdc:Point" x="449" y="134" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="402" y="134" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="BPMNShape_new_tweet_3" bpmnElement="start_event_new_filecontent">
+        <omgdc:Bounds x="110" y="119" width="30" height="30" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="88" y="151" width="74" height="12" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="BPMNEdge_SequenceFlow_9" bpmnElement="SequenceFlow_9">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="140" y="134" />
+        <omgdi:waypoint xsi:type="omgdc:Point" x="218" y="134" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="168" y="119" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_1lea1w1_di" bpmnElement="service_task_send_rejection_notification">
+        <omgdc:Bounds x="582" y="18" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_16bnzyu_di" bpmnElement="SequenceFlow_16bnzyu">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="757" y="214" />
+        <omgdi:waypoint xsi:type="omgdc:Point" x="808" y="214" />
+        <omgdi:waypoint xsi:type="omgdc:Point" x="808" y="154" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="783" y="199" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ch90ml_di" bpmnElement="SequenceFlow_0ch90ml">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="682" y="58" />
+        <omgdi:waypoint xsi:type="omgdc:Point" x="808" y="58" />
+        <omgdi:waypoint xsi:type="omgdc:Point" x="808" y="114" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="745" y="43" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_13zoakc_di" bpmnElement="SequenceFlow_13zoakc">
+        <omgdi:waypoint xsi:type="omgdc:Point" x="635" y="214" />
+        <omgdi:waypoint xsi:type="omgdc:Point" x="657" y="214" />
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds x="646" y="199" width="0" height="0" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="UserTask_0mjl7h7_di" bpmnElement="Task_1142u04">
+        <omgdc:Bounds x="657" y="174" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
